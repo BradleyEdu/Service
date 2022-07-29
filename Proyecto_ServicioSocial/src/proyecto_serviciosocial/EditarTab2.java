@@ -1,10 +1,17 @@
 package proyecto_serviciosocial;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
+import proyecto_serviciosocial.panelCons;
+
 /**
  *
  * @author Eliud Ayala
  */
 public class EditarTab2 extends javax.swing.JFrame {
+    
+    public int fila;
+    public TableModel modelo;
 
     public EditarTab2() {
         initComponents();
@@ -108,6 +115,11 @@ public class EditarTab2 extends javax.swing.JFrame {
         btnTermina.setBackground(new java.awt.Color(153, 255, 153));
         btnTermina.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         btnTermina.setText("Editar");
+        btnTermina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTerminaActionPerformed(evt);
+            }
+        });
 
         btnCancela.setBackground(new java.awt.Color(255, 102, 102));
         btnCancela.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
@@ -344,9 +356,80 @@ public class EditarTab2 extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCancelaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btnTerminaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTerminaActionPerformed
+        System.out.println("La fila del metodo es: " + fila);
+        System.out.println("El modelo del metodo es: " + modelo);
+        //llenarTabla(fila, modelo);
+        /*String Del = txtDel_dia.getText() + "/" + txtDel_mes.getText() + "/" + txtDel_ano.getText();
+        String Al = txtAl_dia.getText() + "/" + txtAl_mes.getText() + "/" + txtAl_ano.getText();
+        
+        try {
+            System.out.println("---INICIA REGISTRO DE DATOS----");
+
+            String sql = "UPDATE personal_sueldo SET "
+                    + "del = ?,"
+                    + "al = ?,"
+                    + "codigo = ?,"
+                    + "puesto = ?,"
+                    + "sueldo = ?,"
+                    + "quinquenio = ?,"
+                    + "otras = ?,"
+                    + "total = ?,"
+                    + "motivo = ?,"
+                    + "WHERE filiacion = '" + pan.txtFili.getText() + "'"
+                    + "AND del = '"+Del+"'";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, Del);
+            ps.setString(2, Al);
+            ps.setString(3, txtCod.getText());
+            ps.setString(4, txtNom.getText());
+            ps.setString(5, txtSueldo.getText());
+            ps.setString(6, txtQuinq.getText());
+            ps.setString(7, txtOtras.getText());
+            ps.setString(8, txtTotal.getText());
+            ps.setString(8, txtMotivo.getText());
+            
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Registro Actualizado", "Actualización exitosa", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(Editar.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error en la consulta de actualizar", "Error en consulta de actualizacion", JOptionPane.ERROR_MESSAGE);
+        }*/
+        panelCons.tablaTodo.setModel(llenarTabla(fila, modelo));
+        JOptionPane.showMessageDialog(null, "Tabla actualizada", "Actualizacion con exito",JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
+    }//GEN-LAST:event_btnTerminaActionPerformed
+
+    public int recibeFila(int fila){
+        return fila;
+    }
+    
+    public TableModel recibeModelo(TableModel modelo){
+        return modelo;
+    }
+    
+    public TableModel llenarTabla(int fila, TableModel modelo){
+        System.out.println("La fila en editar es: " + fila);
+        //System.out.println("El valor de la pinche celda es: " + pan.tablaPuestos.getValueAt(fila + 1, 0));
+        
+        String Del = txtDel_dia.getText() + "/" + txtDel_mes.getText() + "/" + txtDel_ano.getText();
+        String Al = txtAl_dia.getText() + "/" + txtAl_mes.getText() + "/" + txtAl_ano.getText();
+        
+        modelo.setValueAt(Del, fila, 0);
+        modelo.setValueAt(Al, fila, 1);
+        modelo.setValueAt(txtNom.getText(), fila, 2);
+        modelo.setValueAt(txtCod.getText(), fila, 3);
+        modelo.setValueAt(txtRamo.getText(), fila, 4);
+        modelo.setValueAt(txtPagad.getText(), fila, 5);
+        modelo.setValueAt(txtSueldo.getText(), fila, 6);
+        modelo.setValueAt(txtQuinq.getText(), fila, 7);
+        modelo.setValueAt(txtOtras.getText(), fila, 8);
+        modelo.setValueAt(txtTotal.getText(), fila, 9);
+        return modelo;
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
