@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
+import proyecto_serviciosocial.panelCons;
 
 /**
  *
@@ -14,6 +17,8 @@ import javax.swing.JOptionPane;
 public class Editar extends javax.swing.JFrame {
 
     //panelCons pan = new panelCons();
+    public int fila;
+    public TableModel modelo;
     
     public Editar() {
         initComponents();
@@ -382,7 +387,9 @@ public class Editar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancela1ActionPerformed
 
     private void btnTermina1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTermina1ActionPerformed
-        llenarTabla();
+        System.out.println("La fila del metodo es: " + fila);
+        System.out.println("El modelo del metodo es: " + modelo);
+        //llenarTabla(fila, modelo);
         /*String Del = txtDel_dia.getText() + "/" + txtDel_mes.getText() + "/" + txtDel_ano.getText();
         String Al = txtAl_dia.getText() + "/" + txtAl_mes.getText() + "/" + txtAl_ano.getText();
         
@@ -420,29 +427,38 @@ public class Editar extends javax.swing.JFrame {
             Logger.getLogger(Editar.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error en la consulta de actualizar", "Error en consulta de actualizacion", JOptionPane.ERROR_MESSAGE);
         }*/
+        panelCons.tablaPuestos.setModel(llenarTabla(fila, modelo));
+        JOptionPane.showMessageDialog(null, "Tabla actualizada", "Actualizacion con exito",JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
     }//GEN-LAST:event_btnTermina1ActionPerformed
 
+    public int recibeFila(int fila){
+        return fila;
+    }
     
-    public void llenarTabla(){
-        panelCons pan = new panelCons();
-        int fila = Integer.parseInt(lblfila.getText());
+    public TableModel recibeModelo(TableModel modelo){
+        return modelo;
+    }
+    
+    public TableModel llenarTabla(int fila, TableModel modelo){
         System.out.println("La fila en editar es: " + fila);
         //System.out.println("El valor de la pinche celda es: " + pan.tablaPuestos.getValueAt(fila + 1, 0));
         
         String Del = txtDel_dia.getText() + "/" + txtDel_mes.getText() + "/" + txtDel_ano.getText();
         String Al = txtAl_dia.getText() + "/" + txtAl_mes.getText() + "/" + txtAl_ano.getText();
         
-        pan.modelo.setValueAt(txtMotivo.getText(), 0, fila);
-        /*pan.tablaPuestos.setValueAt(Del, fila, 1);
-        pan.modelo.setValueAt(Al, fila, 2);
-        pan.modelo.setValueAt(txtNom.getText(), fila, 3);
-        pan.modelo.setValueAt(txtCod.getText(), fila, 4);
-        pan.modelo.setValueAt(txtRamo.getText(), fila, 5);
-        pan.modelo.setValueAt(txtPagad.getText(), fila, 6);
-        pan.modelo.setValueAt(txtSueldo.getText(), fila, 7);
-        pan.modelo.setValueAt(txtQuinq.getText(), fila, 8);
-        pan.modelo.setValueAt(txtOtras.getText(), fila, 9);
-        pan.modelo.setValueAt(txtTotal.getText(), fila, 10);*/
+        modelo.setValueAt(txtMotivo.getText(), fila, 0);
+        modelo.setValueAt(Del, fila, 1);
+        modelo.setValueAt(Al, fila, 2);
+        modelo.setValueAt(txtNom.getText(), fila, 3);
+        modelo.setValueAt(txtCod.getText(), fila, 4);
+        modelo.setValueAt(txtRamo.getText(), fila, 5);
+        modelo.setValueAt(txtPagad.getText(), fila, 6);
+        modelo.setValueAt(txtSueldo.getText(), fila, 7);
+        modelo.setValueAt(txtQuinq.getText(), fila, 8);
+        modelo.setValueAt(txtOtras.getText(), fila, 9);
+        modelo.setValueAt(txtTotal.getText(), fila, 10);
+        return modelo;
     }
     
     
