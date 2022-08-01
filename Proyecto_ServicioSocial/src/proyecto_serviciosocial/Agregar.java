@@ -1,6 +1,22 @@
 
 package proyecto_serviciosocial;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
+import proyecto_serviciosocial.panelCons;
+import static proyecto_serviciosocial.panelCons.modelo;
+import static proyecto_serviciosocial.panelCons.tablaPuestos;
+import static proyecto_serviciosocial.panelCons.txtFili;
+
 /**
  *
  * @author Eliud Ayala
@@ -11,6 +27,11 @@ public class Agregar extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
+    
+        conexion conect = new conexion();
+        Connection con = conect.getConnection();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -121,6 +142,11 @@ public class Agregar extends javax.swing.JFrame {
         btnAgregar.setBackground(new java.awt.Color(153, 255, 153));
         btnAgregar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnCancela.setBackground(new java.awt.Color(255, 102, 102));
         btnCancela.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
@@ -378,9 +404,121 @@ public class Agregar extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCancelaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+               
+        String sql = "INSERT INTO personal_sueldo (filiacion, del, al, codigo, puesto, nivel, zona, sueldo, quinquenio, otras, total, motivo)"
+                + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        
+        java.sql.Date fecha1 = new java.sql.Date(0003112);
+        java.sql.Date fecha2 = new java.sql.Date(19990101);
+        
+        try {
+            System.out.println("---INICIA REGISTRO DE DATOS----");
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            ps.setString(1, panelCons.txtFili.getText());
+            ps.setDate(2, fecha1);
+            ps.setDate(3, fecha2);
+            ps.setString(4, "");
+            ps.setString(5, "");
+            ps.setString(6, "");
+            ps.setString(7, "");
+            ps.setDouble(8, 0);
+            ps.setDouble(9, 0);
+            ps.setDouble(10, 0);
+            ps.setDouble(11, 0);
+            ps.setString(12, txtMotivo.getText());
+            
+            ps.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Registro Guardado");
+            llenarTabla();
+            this.dispose();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelRegistro.class.getName()).log(Level.SEVERE, null, ex);
+            
+            System.out.println("---------------NO SE GUARDARON LOS DATOS!!!-------------");
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    public void llenarTabla(){
+        Object columnas[] = new Object[12];
+        
+        int filas1 = tablaPuestos.getRowCount();
+        for (int i = filas1 - 1; i >= 0; i--) {
+            modelo.removeRow(0);
+        }
+
+        try {
+
+            String sql = "SELECT motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
+                    + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
+                    + "WHERE filiacion = '" + txtFili.getText() + "' "
+                    + "AND del >= '" + sacarFechaBaja(txtFili.getText()) + "' "
+                    //+ "AND motivo != '"+""+"' "
+                    + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras";
+
+            Statement sentencia = con.createStatement();
+            ResultSet rs = sentencia.executeQuery(sql);
+
+            while (rs.next()) {
+                columnas[0] = rs.getString(1);
+                
+                Date fechaDel = rs.getDate(2);
+                Date fechaAl = rs.getDate(3);
+                
+                columnas[1] = formatter.format(fechaDel);
+                if (fechaAl == null) {
+                    columnas[2] = "";
+                } else {
+                    columnas[2] = formatter.format(fechaAl);
+                }
+                columnas[3] = rs.getString(4);
+                columnas[4] = rs.getString(5);
+                columnas[5] = rs.getString(6);
+                columnas[6] = "";
+                columnas[7] = rs.getString(7);
+                columnas[8] = rs.getDouble(7);
+                columnas[9] = rs.getDouble(8);
+                columnas[10] = rs.getDouble(9);
+                columnas[11] = rs.getDouble(10);
+                panelCons.modelo.addRow(columnas);
+            }
+            
+            panelCons.tablaPuestos.setModel(panelCons.modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error de agregar", "Agregar nuevo"
+                    + "registro", JOptionPane.ERROR_MESSAGE);
+        } 
+    
+    }
+    
+    public Date sacarFechaBaja(String filia) {
+        try {
+            String sql = "SELECT del FROM personal_sueldo WHERE motivo != '" + "" + "' AND "
+                    + "filiacion = '" + filia + "' LIMIT 1";
+
+            Statement sentencia = con.createStatement();
+            ResultSet rs = sentencia.executeQuery(sql);
+
+            while (rs.next()) {
+                Date fechaBaja = rs.getDate(1);
+                if (rs.getDate(1) != null) {
+                    return fechaBaja;
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error de consulta", "Error en la consulta de la fecha", JOptionPane.ERROR_MESSAGE);
+        }
+        return null;
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

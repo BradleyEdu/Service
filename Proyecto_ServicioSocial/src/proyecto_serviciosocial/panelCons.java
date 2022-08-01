@@ -35,21 +35,21 @@ public class panelCons extends javax.swing.JPanel {
 
     conexion conect = new conexion();
     Connection con = conect.getConnection();
-    
-    DefaultTableModel modelo = new DefaultTableModel();
-    DefaultTableModel modelo2 = new DefaultTableModel();
-    
+
+    public static DefaultTableModel modelo = new DefaultTableModel();
+    public static DefaultTableModel modelo2 = new DefaultTableModel();
+
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-    
+
     Editar edit = new Editar();
     EditarTab2 edit2 = new EditarTab2();
     Agregar agr = new Agregar();
-    
+
     public int otra;
 
     public panelCons() {
         initComponents();
-        
+
         modelo.addColumn("Motivo");
         modelo.addColumn("Del");
         modelo.addColumn("Al");
@@ -73,7 +73,7 @@ public class panelCons extends javax.swing.JPanel {
         modelo2.addColumn("Quinquenio");
         modelo2.addColumn("Otras percepciones");
         modelo2.addColumn("Total");
-        
+
         this.setSize(500, 500);
     }
 
@@ -187,7 +187,7 @@ public class panelCons extends javax.swing.JPanel {
 
             }
         ));
-        tablaPuestos.setPreferredSize(new java.awt.Dimension(305, 550));
+        tablaPuestos.setPreferredSize(new java.awt.Dimension(305, 750));
         jScrollPane1.setViewportView(tablaPuestos);
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -726,7 +726,7 @@ public class panelCons extends javax.swing.JPanel {
     }//GEN-LAST:event_txtHomoActionPerformed
 
     private void btnBuscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscActionPerformed
-        try {            
+        try {
             consultarPersonal();
             JOptionPane.showMessageDialog(null, "Si hay campos vacíos, completelos y presione el botón ACTUALIZAR INFORMACION", "COMPLETAR LOS CAMPOS", JOptionPane.WARNING_MESSAGE);
         } catch (IOException ex) {
@@ -740,30 +740,30 @@ public class panelCons extends javax.swing.JPanel {
 
     private void btnEditar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditar1ActionPerformed
         int fila = tablaPuestos.getSelectedRow();
-        
+
         edit.fila = edit.recibeFila(fila);
         edit.modelo = edit.recibeModelo(modelo);
-        
+
         edit.lblfila.setText(String.valueOf(fila));
         otra = fila;
         System.out.println("La fila seleccionada es: " + fila);
         System.out.println("Otra vale: " + otra);
-        
-        if (fila >= 0) {        
+
+        if (fila >= 0) {
             String motivo = (String) modelo.getValueAt(fila, 0);
-            
+
             String del = (String) modelo.getValueAt(fila, 1);
             String diaD, mesD, anoD;
-            diaD = del.substring(0,2);
-            mesD = del.substring(3,5);
-            anoD = del.substring(6,10);
-            
+            diaD = del.substring(0, 2);
+            mesD = del.substring(3, 5);
+            anoD = del.substring(6, 10);
+
             String al = (String) modelo.getValueAt(fila, 2);
             String diaA, mesA, anoA;
-            diaA = al.substring(0,2);
-            mesA = al.substring(3,5);
-            anoA = al.substring(6,10);
-            
+            diaA = al.substring(0, 2);
+            mesA = al.substring(3, 5);
+            anoA = al.substring(6, 10);
+
             String nombre = (String) modelo.getValueAt(fila, 3);
             String ramo = (String) modelo.getValueAt(fila, 4);
             String codigo = (String) modelo.getValueAt(fila, 5);
@@ -787,7 +787,7 @@ public class panelCons extends javax.swing.JPanel {
             edit.txtSueldo.setText(sueldo.toString());
             edit.txtQuinq.setText(quinquenio.toString());
             edit.txtOtras.setText(otras.toString());
-            edit.txtTotal.setText(total.toString());        
+            edit.txtTotal.setText(total.toString());
 
             edit.setVisible(true);
         } else {
@@ -796,31 +796,33 @@ public class panelCons extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEditar1ActionPerformed
 
     private void btnEliminar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminar1ActionPerformed
-        if (tablaPuestos.getSelectedRow() >= 1){
+        if (tablaPuestos.getSelectedRow() >= 1) {
             int fila = tablaPuestos.getSelectedRow();
             modelo.removeRow(fila);
-        } else JOptionPane.showMessageDialog(null, "Seleccione una fila");
-        
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione una fila");
+        }
+
     }//GEN-LAST:event_btnEliminar1ActionPerformed
 
     private void btnEditar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditar2ActionPerformed
         int fila = tablaTodo.getSelectedRow();
-        
+
         edit2.fila = edit.recibeFila(fila);
         edit2.modelo = edit.recibeModelo(modelo2);
-                
-        if (fila > 0) {        
+
+        if (fila >= 0) {
             String del = (String) modelo2.getValueAt(fila, 0);
             String diaD, mesD, anoD;
-            diaD = del.substring(0,2);
-            mesD = del.substring(3,5);
-            anoD = del.substring(6,10);
-            
+            diaD = del.substring(0, 2);
+            mesD = del.substring(3, 5);
+            anoD = del.substring(6, 10);
+
             String al = (String) modelo2.getValueAt(fila, 1);
             String diaA, mesA, anoA;
-            diaA = al.substring(0,2);
-            mesA = al.substring(3,5);
-            anoA = al.substring(6,10);
+            diaA = al.substring(0, 2);
+            mesA = al.substring(3, 5);
+            anoA = al.substring(6, 10);
             String nombre = (String) modelo2.getValueAt(fila, 2);
             String ramo = (String) modelo2.getValueAt(fila, 3);
             String codigo = (String) modelo2.getValueAt(fila, 4);
@@ -829,7 +831,6 @@ public class panelCons extends javax.swing.JPanel {
             Double quinquenio = (Double) modelo2.getValueAt(fila, 7);
             Double otras = (Double) modelo2.getValueAt(fila, 8);
             Double total = (Double) modelo2.getValueAt(fila, 9);
-
 
             edit2.txtDel_dia.setText(diaD);
             edit2.txtDel_mes.setText(mesD);
@@ -843,7 +844,7 @@ public class panelCons extends javax.swing.JPanel {
             edit2.txtSueldo.setText(sueldo.toString());
             edit2.txtQuinq.setText(quinquenio.toString());
             edit2.txtOtras.setText(otras.toString());
-            edit2.txtTotal.setText(total.toString());        
+            edit2.txtTotal.setText(total.toString());
 
             edit2.setVisible(true);
         } else {
@@ -852,10 +853,11 @@ public class panelCons extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEditar2ActionPerformed
 
     private void btnEliminar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminar2ActionPerformed
-        if (tablaTodo.getSelectedRow() >= 1){
+        if (tablaTodo.getSelectedRow() >= 1) {
             int fila = tablaTodo.getSelectedRow();
             modelo2.removeRow(fila);
-        } else JOptionPane.showMessageDialog(null, "Seleccione una fila");
+        } else
+            JOptionPane.showMessageDialog(null, "Seleccione una fila");
     }//GEN-LAST:event_btnEliminar2ActionPerformed
 
     private void btnLimpiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiActionPerformed
@@ -880,17 +882,17 @@ public class panelCons extends javax.swing.JPanel {
         txtBaja_mes.setText(null);
         txtBaja_ano.setText(null);
         txtMotivos.setText(null);
-        
+
         int filas1 = tablaPuestos.getRowCount();
-        for(int i = filas1 - 1; i >=0; i--){
+        for (int i = filas1 - 1; i >= 0; i--) {
             modelo.removeRow(0);
         }
-        
+
         int filas2 = tablaTodo.getRowCount();
-        for (int i = filas2 - 1; i >= 0; i--){
+        for (int i = filas2 - 1; i >= 0; i--) {
             modelo2.removeRow(0);
         }
-        
+
     }//GEN-LAST:event_btnLimpiActionPerformed
 
     private void btnAgregar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar2ActionPerformed
@@ -899,76 +901,12 @@ public class panelCons extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAgregar2ActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        /*try {
-            System.out.println("---INICIA REGISTRO DE DATOS----");
-//            sql = "update personal set (filiacion,curp,rfc,homoclave,apellido_paterno,apellido_materno,nombre,calle,"
-//                    + "numero,colonia,codigo_postal,ciudad,estado,ingreso,ingreso_letra,baja,baja_letra,motivo_baja)"
-//                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) where filiacion='"+filiacion+"'";
 
-            String sql = "UPDATE personal SET filiacion = ?, "
-                    + "curp = ?, "
-                    + "rfc = ?, "
-                    + "homoclave = ?, "
-                    + "apellido_paterno = ?, "
-                    + "apellido_materno = ?, "
-                    + "nombre = ?, "
-                    + "calle = ?, "
-                    + "numero = ?, "
-                    + "colonia = ?, "
-                    + "codigo_postal = ?, "
-                    + "ciudad = ?, "
-                    + "estado = ?, "
-                    + "ingreso = ?, "
-                    + "ingreso_letra = ?, "
-                    + "baja = ?, "
-                    + "baja_letra = ?, "
-                    + "motivo_baja = ? "
-                    + "WHERE filiacion = '" +txtFili.getText()+ "'";
-            
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, txtFili.getText());
-            ps.setString(2, txtCurp.getText());
-            ps.setString(3, txtRfc.getText());
-            ps.setString(4, txtHomo.getText());
-            ps.setString(5, txtPaterno.getText());
-            ps.setString(6, txtMaterno.getText());
-            ps.setString(7, txtNom.getText());
-            ps.setString(8, txtCalle.getText());
-            ps.setString(9, txtNumExt.getText());
-            ps.setString(10, txtCol.getText());
-            ps.setString(11, txtCp.getText());
-            ps.setString(12, txtCiudad.getText());
-            ps.setString(13, txtEstado.getText());
-            
-            String fecha1 = txtIngreso_ano.getText() + "-" + txtIngreso_mes.getText() + "-" + txtIngreso_dia.getText();
-            String fecha2 = txtBaja_ano.getText() + "-" + txtBaja_mes.getText() + "-" + txtBaja_dia.getText();
-            String ingresob = fecha1.replace(" ", "");
-            String bajab = fecha2.replace(" ", "");
-            
-            /*SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-            Date ingreso = formato.parse(ingresob);            
-            Date baja = formato.parse(bajab);
-            
-            java.sql.Date date2 = new java.sql.Date(ingreso.getTime());
-            java.sql.Date date3 = new java.sql.Date(baja.getTime());
-            
-            ps.setString(14, ingresob);
-            ps.setString(15, txtIngreso_letra.getText());
-            ps.setString(16, bajab);
-            ps.setString(17, txtBaja_letra.getText());
-            ps.setString(18, txtMotivos.getText());
-            ps.executeUpdate();
+        String filiacion, curp, rfc, homoclave, apellido_paterno, apellido_materno, nombre, calle, numero, colonia,
+                codigo_postal, ciudad, estado, ingreso = "", ingreso_letra, baja = "", baja_letra, motivo = "";
 
-            JOptionPane.showMessageDialog(null, "Registro Actualizado");
-            //limpiar();
-        } catch (SQLException ex) {
-            Logger.getLogger(panelCons.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "No se actualizó el personal", "Error de consulta", JOptionPane.ERROR_MESSAGE);
-        }*/
-        
-        String filiacion,curp,rfc,homoclave,apellido_paterno, apellido_materno,nombre,calle,numero,colonia,
-                codigo_postal,ciudad,estado,ingreso="",ingreso_letra,baja="",baja_letra,motivo="";
-        String fechaIng="",fechaBaja="";
+        String fechaIng = "", fechaBaja = "";
+
         filiacion = txtFili.getText();
         curp = txtCurp.getText();
         rfc = txtRfc.getText();
@@ -982,21 +920,18 @@ public class panelCons extends javax.swing.JPanel {
         codigo_postal = txtCp.getText();
         ciudad = txtCiudad.getText();
         estado = txtEstado.getText();
-        fechaIng = txtIngreso_ano.getText()+"-"+txtIngreso_mes.getText()+"-"+txtIngreso_dia.getText();
-        ingreso = fechaIng.replace(" ","");
+        fechaIng = txtIngreso_ano.getText() + "-" + txtIngreso_mes.getText() + "-" + txtIngreso_dia.getText();
+        ingreso = fechaIng.replace(" ", "");
         ingreso_letra = txtIngreso_letra.getText();
-        fechaBaja=txtBaja_ano.getText()+"-"+txtBaja_mes.getText()+"-"+txtBaja_dia.getText();
-        baja = fechaBaja.replace(" ","");
+        fechaBaja = txtBaja_ano.getText() + "-" + txtBaja_mes.getText() + "-" + txtBaja_dia.getText();
+        baja = fechaBaja.replace(" ", "");
         baja_letra = txtBaja_letra.getText();
         motivo = txtMotivos.getText();
-        
+
         try {
             System.out.println("---INICIA REGISTRO DE DATOS----");
-//            sql = "update personal set (filiacion,curp,rfc,homoclave,apellido_paterno,apellido_materno,nombre,calle,"
-//                    + "numero,colonia,codigo_postal,ciudad,estado,ingreso,ingreso_letra,baja,baja_letra,motivo_baja)"
-//                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) where filiacion='"+filiacion+"'";
 
-           String sql = "update personal set filiacion= ?,"
+            String sql = "update personal set filiacion= ?,"
                     + "curp= ?,"
                     + "rfc= ?,"
                     + "homoclave= ?,"
@@ -1014,7 +949,7 @@ public class panelCons extends javax.swing.JPanel {
                     + "baja= ?,"
                     + "baja_letra= ?,"
                     + "motivo_baja= ?"
-                    + "where filiacion='"+filiacion+"'";
+                    + "where filiacion='" + filiacion + "'";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, filiacion);
             ps.setString(2, curp);
@@ -1052,9 +987,9 @@ public class panelCons extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBaja_letraActionPerformed
 
-    public String sacarFechaBaja(String filia){
+    public Date sacarFechaBaja(String filia) {
         try {
-            String sql = "SELECT del FROM personal_sueldo WHERE motivo != '"+""+"' AND "
+            String sql = "SELECT del FROM personal_sueldo WHERE motivo != '" + "" + "' AND "
                     + "filiacion = '" + filia + "' LIMIT 1";
 
             Statement sentencia = con.createStatement();
@@ -1062,24 +997,24 @@ public class panelCons extends javax.swing.JPanel {
 
             while (rs.next()) {
                 Date fechaBaja = rs.getDate(1);
-                if(rs.getDate(1) != null){
-                    return fechaBaja.toString();
-                }  
+                if (rs.getDate(1) != null) {
+                    return fechaBaja;
+                }
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error de consulta", "Error en la consulta de la fecha", JOptionPane.ERROR_MESSAGE);
         }
-        return "";
+        return null;
     }
-    
+
     public void consultarPersonal() throws IOException {
 
         try {
             String sql = "SELECT curp, rfc, homoclave, apellido_paterno, apellido_materno"
                     + ", nombre, calle, numero, colonia, codigo_postal, ciudad, estado"
-                    + ", ingreso, ingreso_letra, baja, baja_letra, motivo_baja FROM personal WHERE filiacion = '" + txtFili.getText()+"'" ;
+                    + ", ingreso, ingreso_letra, baja, baja_letra, motivo_baja FROM personal WHERE filiacion = '" + txtFili.getText() + "'";
 
             Statement sentencia = con.createStatement();
             ResultSet rs = sentencia.executeQuery(sql);
@@ -1099,16 +1034,16 @@ public class panelCons extends javax.swing.JPanel {
                 txtEstado.setText(rs.getString(12));
                 Date fechaIngreso = rs.getDate(13);
                 String ingreso = (formatter.format(fechaIngreso));
-                txtIngreso_dia.setText(ingreso.substring(0,2));
-                txtIngreso_mes.setText(ingreso.substring(3,5));
-                txtIngreso_ano.setText(ingreso.substring(6,10));
+                txtIngreso_dia.setText(ingreso.substring(0, 2));
+                txtIngreso_mes.setText(ingreso.substring(3, 5));
+                txtIngreso_ano.setText(ingreso.substring(6, 10));
                 txtIngreso_letra.setText((rs.getString(14)));
                 if (rs.getDate(15) != null) {
                     Date fechaBaja = rs.getDate(15);
                     String baja = (formatter.format(fechaBaja));
-                    txtBaja_dia.setText(ingreso.substring(0,2));
-                    txtBaja_mes.setText(ingreso.substring(3,5));
-                    txtBaja_ano.setText(ingreso.substring(6,10));
+                    txtBaja_dia.setText(baja.substring(0, 2));
+                    txtBaja_mes.setText(baja.substring(3, 5));
+                    txtBaja_ano.setText(baja.substring(6, 10));
                 }
                 txtBaja_letra.setText(rs.getString(16));
                 txtMotivos.setText(rs.getString(17));
@@ -1125,32 +1060,31 @@ public class panelCons extends javax.swing.JPanel {
 
     public void consultarPersonal_Sueldo() throws IOException {
         Object columnas[] = new Object[12];
-        
-        try {            
-            String sql2 = "SELECT motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
-                    + "total FROM personal_sueldo "
-                    + "WHERE filiacion = '" + txtFili.getText() + "'"
-                    /*+ " AND del <= '" + sacarFechaBaja(txtFili.getText()) + "'"*/
-                    + " ORDER BY del ASC";
-            
+
+        try {
+
             String sql = "SELECT motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
                     + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
-                    + "WHERE filiacion = '" + "ROGS671001D40" + "' "
-                    + "AND del >= '" + sacarFechaBaja("ROGS671001D40") + "' "
-                    /*+ "AND motivo != '"+""+"' "*/
+                    + "WHERE filiacion = '" + txtFili.getText() + "' "
+                    + "AND del >= '" + sacarFechaBaja(txtFili.getText()) + "' "
+                    //+ "AND motivo != '"+""+"' "
                     + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras";
 
             Statement sentencia = con.createStatement();
             ResultSet rs = sentencia.executeQuery(sql);
-            int conta = 29;
+
             while (rs.next()) {
                 columnas[0] = rs.getString(1);
+                
                 Date fechaDel = rs.getDate(2);
                 Date fechaAl = rs.getDate(3);
+                
                 columnas[1] = formatter.format(fechaDel);
-                if (fechaAl == null){
+                if (fechaAl == null) {
                     columnas[2] = "";
-                } else columnas[2] = formatter.format(fechaAl);            
+                } else {
+                    columnas[2] = formatter.format(fechaAl);
+                }
                 columnas[3] = rs.getString(4);
                 columnas[4] = rs.getString(5);
                 columnas[5] = rs.getString(6);
@@ -1161,21 +1095,21 @@ public class panelCons extends javax.swing.JPanel {
                 columnas[10] = rs.getDouble(9);
                 columnas[11] = rs.getDouble(10);
                 modelo.addRow(columnas);
-                llenarTabla(columnas, conta);
-                conta++;
             }
+            
             tablaPuestos.setModel(modelo);
 
         } catch (SQLException ex) {
             Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Error de consulta", "Error en la consulta", JOptionPane.ERROR_MESSAGE);
-        }
+            JOptionPane.showMessageDialog(null, "Error de consulta", "Tabla"
+                    + " de personal_sueldo", JOptionPane.ERROR_MESSAGE);
+        } 
     }
-    
+
     public void llenarTabla2() throws IOException {
         Object columnas[] = new Object[12];
-        
-        try {                       
+
+        try {
             String sql = "SELECT del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
                     + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
                     + "WHERE filiacion = '" + "ROGS671001D40" + "' "
@@ -1184,14 +1118,16 @@ public class panelCons extends javax.swing.JPanel {
 
             Statement sentencia = con.createStatement();
             ResultSet rs = sentencia.executeQuery(sql);
-            //int conta = 29;
+
             while (rs.next()) {
                 Date fechaDel = rs.getDate(1);
                 Date fechaAl = rs.getDate(2);
                 columnas[0] = formatter.format(fechaDel);
-                if (fechaAl == null){
+                if (fechaAl == null) {
                     columnas[1] = "";
-                } else columnas[1] = formatter.format(fechaAl);            
+                } else {
+                    columnas[1] = formatter.format(fechaAl);
+                }
                 columnas[2] = rs.getString(3);
                 columnas[3] = rs.getString(4);
                 columnas[4] = "";
@@ -1201,8 +1137,7 @@ public class panelCons extends javax.swing.JPanel {
                 columnas[8] = rs.getDouble(8);
                 columnas[9] = rs.getDouble(9);
                 modelo2.addRow(columnas);
-                //llenarTabla(columnas, conta);
-                //conta++;
+
             }
             tablaTodo.setModel(modelo2);
 
@@ -1211,93 +1146,192 @@ public class panelCons extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Error de consulta", "Error en la consulta", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    public void llenarNombre() throws IOException{
+
+    public void llenarNombre() throws IOException {
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\dog_a\\Downloads\\servicio.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx"));
 
             XSSFWorkbook wb = new XSSFWorkbook(file);
             XSSFSheet sheet = wb.getSheetAt(0);
+            XSSFSheet sheet2 = wb.getSheetAt(1);
 
-            XSSFRow fila = sheet.getRow(6);
+            XSSFRow fila = sheet.getRow(5);
+            XSSFRow fila_domicilio = sheet.getRow(11);
+            XSSFRow fila_aportaciones = sheet.getRow(19);
 
-            if(fila == null){
-                fila = sheet.createRow(6);
+            // Comienza el llenado de la parte de informacion de la persona
+            if (fila == null) {
+                fila = sheet.createRow(5);
             }
 
-            XSSFCell nombre = fila.createCell(4);
+            XSSFCell nombre = fila.createCell(6);
             XSSFCell apellido_pat = fila.createCell(0);
-            XSSFCell apellido_mat = fila.createCell(2);
-            XSSFCell curp = fila.createCell(8);
-            XSSFCell rfc = fila.createCell(6);
-            
-            if(nombre == null){
-                nombre = fila.createCell(4);
+            XSSFCell apellido_mat = fila.createCell(3);
+            XSSFCell curp = fila.createCell(11);
+            XSSFCell rfc = fila.createCell(9);
+
+            if (nombre == null) {
+                nombre = fila.createCell(6);
             }
-            
-            if(apellido_pat == null){
+
+            if (apellido_pat == null) {
                 apellido_pat = fila.createCell(0);
             }
-            
-            if(apellido_mat == null){
-                apellido_pat = fila.createCell(2);
-            }
-                        
-            if(curp == null){
-                curp = fila.createCell(8);
-            }
-            
-            if(rfc == null){
-                rfc = fila.createCell(6);
-            }
-            
 
+            if (apellido_mat == null) {
+                apellido_pat = fila.createCell(3);
+            }
 
+            if (curp == null) {
+                curp = fila.createCell(11);
+            }
+
+            if (rfc == null) {
+                rfc = fila.createCell(9);
+            }
+
+            //Termina el llenado de la informacion de la persona
+            // Comienza el llenado de la parte del domicilio
+            if (fila_domicilio == null) {
+                fila_domicilio = sheet.createRow(11);
+            }
+
+            XSSFCell calle = fila_domicilio.createCell(0);
+            XSSFCell numExt = fila_domicilio.createCell(4);
+            XSSFCell colonia = fila_domicilio.createCell(5);
+            XSSFCell cp = fila_domicilio.createCell(9);
+            XSSFCell ciudad = fila_domicilio.createCell(10);
+            XSSFCell estado = fila_domicilio.createCell(12);
+
+            if (calle == null) {
+                calle = fila_domicilio.createCell(0);
+            }
+
+            if (numExt == null) {
+                numExt = fila_domicilio.createCell(4);
+            }
+
+            if (colonia == null) {
+                colonia = fila_domicilio.createCell(5);
+            }
+
+            if (cp == null) {
+                cp = fila_domicilio.createCell(9);
+            }
+
+            if (ciudad == null) {
+                ciudad = fila_domicilio.createCell(10);
+            }
+
+            if (estado == null) {
+                estado = fila_domicilio.createCell(12);
+            }
+
+            //Termina llenado del domicilio
+            //Comienza el llenado de la fila de aportaciones
+            if (fila_aportaciones == null) {
+                fila_aportaciones = sheet.createRow(19);
+            }
+
+            XSSFCell ingreso = fila_aportaciones.createCell(0);
+            XSSFCell ingreso_letra = fila_aportaciones.createCell(2);
+            XSSFCell baja = fila_aportaciones.createCell(7);
+            XSSFCell baja_letra = fila_aportaciones.createCell(9);
+
+            if (ingreso == null) {
+                ingreso = fila_aportaciones.createCell(0);
+            }
+
+            if (ingreso_letra == null) {
+                ingreso_letra = fila_aportaciones.createCell(4);
+            }
+
+            if (baja == null) {
+                baja = fila_aportaciones.createCell(5);
+            }
+
+            if (baja_letra == null) {
+                baja_letra = fila_aportaciones.createCell(9);
+            }
+
+            //Termina llenado de la fila de aportaciones
             CellStyle cellStyle = fila.getSheet().getWorkbook().createCellStyle();
             cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-            
+
             Font cellFont = wb.createFont();
             cellFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
             cellStyle.setFont(cellFont);
-        
+
+            //Se les da estilo a las celdas del xlsx
             nombre.setCellStyle(cellStyle);
             apellido_pat.setCellStyle(cellStyle);
             apellido_mat.setCellStyle(cellStyle);
             curp.setCellStyle(cellStyle);
             rfc.setCellStyle(cellStyle);
-            
+
+            calle.setCellStyle(cellStyle);
+            numExt.setCellStyle(cellStyle);
+            colonia.setCellStyle(cellStyle);
+            cp.setCellStyle(cellStyle);
+            ciudad.setCellStyle(cellStyle);
+            estado.setCellStyle(cellStyle);
+
+            ingreso.setCellStyle(cellStyle);
+            ingreso_letra.setCellStyle(cellStyle);
+            baja.setCellStyle(cellStyle);
+            baja_letra.setCellStyle(cellStyle);
+
             nombre.setCellValue(txtNom.getText());
             apellido_pat.setCellValue(txtPaterno.getText());
             apellido_mat.setCellValue(txtMaterno.getText());
             curp.setCellValue(txtCurp.getText());
             rfc.setCellValue(txtRfc.getText());
+
+            calle.setCellValue(txtCalle.getText());
+            numExt.setCellValue(txtNumExt.getText());
+            colonia.setCellValue(txtCol.getText());
+            cp.setCellValue(txtCp.getText());
+            ciudad.setCellValue(txtCiudad.getText());
+            estado.setCellValue(txtEstado.getText());
+
+            String fechaIng = txtIngreso_dia.getText() + "/" + txtIngreso_mes.getText() + "/" + txtIngreso_ano.getText();
+            String ingresoN = fechaIng.replace(" ", "");
+            String fechaBaja = txtBaja_dia.getText() + "/" + txtBaja_mes.getText() + "/" + txtBaja_ano.getText();
+            String bajaN = fechaBaja.replace(" ", "");
+
+            ingreso.setCellValue(ingresoN);
+            ingreso_letra.setCellValue(txtIngreso_letra.getText());
+            baja.setCellValue(bajaN);
+            baja_letra.setCellValue(txtBaja_letra.getText());
             
+            llenarTablaHD(file, wb, sheet);
+            llenarTablaHD2(file, wb, sheet2);
 
             file.close();
 
-            FileOutputStream output = new FileOutputStream("C:\\Users\\dog_a\\Downloads\\servicio.xlsx");
+            FileOutputStream output = new FileOutputStream("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx");
             wb.write(output);
             output.close();
-            
-            File file1= new File("C:\\Users\\dog_a\\Downloads\\servicio.xlsx");
+
+            File file1 = new File("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx");
             Desktop.getDesktop().open(file1);
-            
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(panelCons.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Cierre el programa Excel para generar el formato");
         }
     }
-    
-    public void llenarTabla(Object[] datos, int cont) throws IOException{
+
+    public void llenarTabla(Object[] datos, int cont) throws IOException {
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\dog_a\\Downloads\\servicio.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx"));
 
             XSSFWorkbook wb = new XSSFWorkbook(file);
             XSSFSheet sheet = wb.getSheetAt(0);
 
             XSSFRow fila = sheet.getRow(cont);
-            
-            
-            if(fila == null){
+
+            if (fila == null) {
                 fila = sheet.createRow(cont);
             }
 
@@ -1312,59 +1346,59 @@ public class panelCons extends javax.swing.JPanel {
             XSSFCell celda9 = fila.createCell(8); //quinquenio
             XSSFCell celda10 = fila.createCell(9); //otras percepciones
             XSSFCell celda11 = fila.createCell(10); //total
-            
-            if(celda1 == null){
+
+            if (celda1 == null) {
                 celda1 = fila.createCell(0);
             }
-            
-            if(celda2 == null){
+
+            if (celda2 == null) {
                 celda2 = fila.createCell(1);
             }
-            
-            if(celda3 == null){
+
+            if (celda3 == null) {
                 celda3 = fila.createCell(2);
             }
-            
-            if(celda4 == null){
+
+            if (celda4 == null) {
                 celda4 = fila.createCell(3);
             }
-            
-            if(celda5 == null){
+
+            if (celda5 == null) {
                 celda5 = fila.createCell(4);
             }
-            
-            if(celda6 == null){
+
+            if (celda6 == null) {
                 celda6 = fila.createCell(5);
             }
-            
-            if(celda7 == null){
+
+            if (celda7 == null) {
                 celda7 = fila.createCell(6);
             }
-            
-            if(celda8 == null){
+
+            if (celda8 == null) {
                 celda8 = fila.createCell(7);
             }
-            
-            if(celda9 == null){
+
+            if (celda9 == null) {
                 celda9 = fila.createCell(8);
             }
-            
-            if(celda10 == null){
+
+            if (celda10 == null) {
                 celda10 = fila.createCell(9);
             }
-            
-            if(celda11 == null){
+
+            if (celda11 == null) {
                 celda11 = fila.createCell(10);
             }
-            
-            for(int i = 0; i<datos.length;i++){
-                if (datos[i] == null){
+
+            for (int i = 0; i < datos.length; i++) {
+                if (datos[i] == null) {
                     datos[i] = "";
                 }
             }
-            
+
             celda1.setCellValue(datos[0].toString());
-            celda2.setCellValue(datos[1].toString());          
+            celda2.setCellValue(datos[1].toString());
             celda3.setCellValue(datos[2].toString());
             celda4.setCellValue(datos[3].toString());
             celda5.setCellValue(datos[4].toString());
@@ -1377,34 +1411,271 @@ public class panelCons extends javax.swing.JPanel {
 
             file.close();
 
-            FileOutputStream output = new FileOutputStream("C:\\Users\\dog_a\\Downloads\\servicio.xlsx");
+            FileOutputStream output = new FileOutputStream("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx");
             wb.write(output);
             output.close();
-            
+
             /*File file1= new File("C:\\Users\\dog_a\\Downloads\\servicio.xlsx");
             Desktop.getDesktop().open(file1);*/
-            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(panelCons.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Cierre el programa Excel para generar el formato");
+        }
+    }
+
+    public void llenarTablaHD(FileInputStream file, XSSFWorkbook wb, XSSFSheet sh) throws IOException {
+        
+        int limite = tablaPuestos.getRowCount() - 1;
+        int j = 0;
+        int cont = 28;
+        Object datos[] = new Object[11];
+        
+        while (j < limite) {
+
+            XSSFRow fila = sh.getRow(cont);
+
+            if (fila == null) {
+                fila = sh.createRow(cont);
+            }
+
+            XSSFCell celda1 = fila.createCell(0); //Motivo
+            XSSFCell celda2_dia = fila.createCell(1); //del_dia
+            XSSFCell celda2_mes = fila.createCell(2); //del_mes
+            XSSFCell celda2_ano = fila.createCell(3); //del_ano
+            XSSFCell celda3_dia = fila.createCell(4); //al
+            XSSFCell celda3_mes = fila.createCell(5); //al
+            XSSFCell celda3_ano = fila.createCell(6); //al
+            XSSFCell celda4 = fila.createCell(7); //nombre
+            XSSFCell celda5 = fila.createCell(8); //codigo
+            XSSFCell celda6 = fila.createCell(9); //ramo registrado
+            XSSFCell celda7 = fila.createCell(10); //pagaduria registrada
+            XSSFCell celda8 = fila.createCell(11); //saldo basico
+            XSSFCell celda9 = fila.createCell(12); //quinquenio
+            XSSFCell celda10 = fila.createCell(13); //otras percepciones
+            XSSFCell celda11 = fila.createCell(14); //total
+
+            if (celda1 == null) {
+                celda1 = fila.createCell(0);
+            }
+
+            if (celda2_dia == null) {
+                celda2_dia = fila.createCell(1);
+            }
+
+            if (celda2_mes == null) {
+                celda2_mes = fila.createCell(2);
+            }
+
+            if (celda2_ano == null) {
+                celda2_ano = fila.createCell(3);
+            }
+
+            if (celda3_dia == null) {
+                celda3_dia = fila.createCell(4);
+            }
+
+            if (celda3_mes == null) {
+                celda3_mes = fila.createCell(5);
+            }
+
+            if (celda3_ano == null) {
+                celda3_ano = fila.createCell(6);
+            }
+
+            if (celda4 == null) {
+                celda4 = fila.createCell(7);
+            }
+
+            if (celda5 == null) {
+                celda5 = fila.createCell(8);
+            }
+
+            if (celda6 == null) {
+                celda6 = fila.createCell(9);
+            }
+
+            if (celda7 == null) {
+                celda7 = fila.createCell(10);
+            }
+
+            if (celda8 == null) {
+                celda8 = fila.createCell(11);
+            }
+
+            if (celda9 == null) {
+                celda9 = fila.createCell(12);
+            }
+
+            if (celda10 == null) {
+                celda10 = fila.createCell(13);
+            }
+
+            if (celda11 == null) {
+                celda11 = fila.createCell(14);
+            }
+
+            for (int i = 0; i < datos.length; i++) {
+                
+                datos[i] = tablaPuestos.getValueAt(j, i);
+                
+                if (datos[i] == null) {
+                    datos[i] = "            ";
+                }
+            }
+
+            celda1.setCellValue(datos[0].toString());
+            celda2_dia.setCellValue((datos[1].toString()).substring(0, 2));
+            celda2_mes.setCellValue((datos[1].toString()).substring(3, 5));
+            celda2_ano.setCellValue(datos[1].toString().substring(6, 10));
+            celda3_dia.setCellValue(datos[2].toString().substring(0, 2));
+            celda3_mes.setCellValue(datos[2].toString().substring(3, 5));
+            celda3_ano.setCellValue(datos[2].toString().substring(6, 10));
+            celda4.setCellValue(datos[3].toString());
+            celda5.setCellValue(datos[4].toString());
+            celda6.setCellValue(datos[5].toString());
+            celda7.setCellValue(datos[6].toString());
+            int punto = datos[7].toString().indexOf(".");
+            celda8.setCellValue(datos[7].toString().substring(0, punto + 3));
+            celda9.setCellValue(datos[8].toString());
+            celda10.setCellValue(datos[9].toString());
+            celda11.setCellValue(datos[10].toString());
+            j++;
+            cont++;
         }
     }
     
-    public void modificar() throws IOException{
+    public void llenarTablaHD2(FileInputStream file, XSSFWorkbook wb, XSSFSheet sh) throws IOException {
+        
+        int limite = tablaTodo.getRowCount() - 1;
+        int j = 0;
+        int cont = 6;
+        Object datos[] = new Object[10];
+        
+        while (j < limite) {
+
+            XSSFRow fila = sh.getRow(cont);
+
+            if (fila == null) {
+                fila = sh.createRow(cont);
+            }
+
+            XSSFCell celda2_dia = fila.createCell(0); //del_dia
+            XSSFCell celda2_mes = fila.createCell(1); //del_mes
+            XSSFCell celda2_ano = fila.createCell(2); //del_ano
+            XSSFCell celda3_dia = fila.createCell(3); //al
+            XSSFCell celda3_mes = fila.createCell(4); //al
+            XSSFCell celda3_ano = fila.createCell(5); //al
+            XSSFCell celda4 = fila.createCell(6); //nombre
+            XSSFCell celda5 = fila.createCell(7); //codigo
+            XSSFCell celda6 = fila.createCell(8); //ramo registrado
+            XSSFCell celda7 = fila.createCell(9); //pagaduria registrada
+            XSSFCell celda8 = fila.createCell(10); //saldo basico
+            XSSFCell celda9 = fila.createCell(11); //quinquenio
+            XSSFCell celda10 = fila.createCell(12); //otras percepciones
+            XSSFCell celda11 = fila.createCell(13); //total
+
+
+            if (celda2_dia == null) {
+                celda2_dia = fila.createCell(0);
+            }
+
+            if (celda2_mes == null) {
+                celda2_mes = fila.createCell(1);
+            }
+
+            if (celda2_ano == null) {
+                celda2_ano = fila.createCell(2);
+            }
+
+            if (celda3_dia == null) {
+                celda3_dia = fila.createCell(3);
+            }
+
+            if (celda3_mes == null) {
+                celda3_mes = fila.createCell(4);
+            }
+
+            if (celda3_ano == null) {
+                celda3_ano = fila.createCell(5);
+            }
+
+            if (celda4 == null) {
+                celda4 = fila.createCell(6);
+            }
+
+            if (celda5 == null) {
+                celda5 = fila.createCell(7);
+            }
+
+            if (celda6 == null) {
+                celda6 = fila.createCell(8);
+            }
+
+            if (celda7 == null) {
+                celda7 = fila.createCell(9);
+            }
+
+            if (celda8 == null) {
+                celda8 = fila.createCell(10);
+            }
+
+            if (celda9 == null) {
+                celda9 = fila.createCell(11);
+            }
+
+            if (celda10 == null) {
+                celda10 = fila.createCell(12);
+            }
+
+            if (celda11 == null) {
+                celda11 = fila.createCell(13);
+            }
+
+            for (int i = 0; i < datos.length; i++) {
+                
+                datos[i] = tablaTodo.getValueAt(j, i);
+                
+                if (datos[i] == null) {
+                    datos[i] = "            ";
+                }
+            }
+
+            celda2_dia.setCellValue((datos[0].toString()).substring(0, 2));
+            celda2_mes.setCellValue((datos[0].toString()).substring(3, 5));
+            celda2_ano.setCellValue(datos[0].toString().substring(6, 10));
+            celda3_dia.setCellValue(datos[1].toString().substring(0, 2));
+            celda3_mes.setCellValue(datos[1].toString().substring(3, 5));
+            celda3_ano.setCellValue(datos[1].toString().substring(6, 10));
+            celda4.setCellValue(datos[2].toString());
+            celda5.setCellValue(datos[3].toString());
+            celda6.setCellValue(datos[4].toString());
+            celda7.setCellValue(datos[5].toString());
+            int punto = datos[6].toString().indexOf(".");
+            celda8.setCellValue(datos[6].toString().substring(0, punto + 2));
+            celda9.setCellValue(datos[7].toString());
+            celda10.setCellValue(datos[8].toString());
+            celda11.setCellValue(datos[9].toString());
+            j++;
+            cont++;
+        }
+    }
+
+    public void modificar() throws IOException {
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\dog_a\\Downloads\\servicio.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx"));
 
             XSSFWorkbook wb = new XSSFWorkbook(file);
             XSSFSheet sheet = wb.getSheetAt(0);
 
             XSSFRow fila = sheet.getRow(29);
 
-            if(fila == null){
+            if (fila == null) {
                 fila = sheet.createRow(29);
             }
 
             XSSFCell celda = fila.createCell(0);
-            
-            if(celda == null){
+
+            if (celda == null) {
                 celda = fila.createCell(0);
             }
 
@@ -1412,13 +1683,13 @@ public class panelCons extends javax.swing.JPanel {
 
             file.close();
 
-            FileOutputStream output = new FileOutputStream("C:\\Users\\dog_a\\Downloads\\servicio.xlsx");
+            FileOutputStream output = new FileOutputStream("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx");
             wb.write(output);
             output.close();
-            
-            File file1= new File("C:\\Users\\dog_a\\Downloads\\servicio.xlsx");
+
+            File file1 = new File("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx");
             Desktop.getDesktop().open(file1);
-            
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(panelCons.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1481,7 +1752,7 @@ public class panelCons extends javax.swing.JPanel {
     public javax.swing.JTextField txtCp;
     public javax.swing.JTextField txtCurp;
     public javax.swing.JTextField txtEstado;
-    public javax.swing.JTextField txtFili;
+    public static javax.swing.JTextField txtFili;
     public javax.swing.JTextField txtHomo;
     public javax.swing.JTextField txtIngreso_ano;
     public javax.swing.JTextField txtIngreso_dia;
