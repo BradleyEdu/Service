@@ -1,6 +1,7 @@
 package proyecto_serviciosocial;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 /**
  * @author Eduardo Leyva Bradley
@@ -12,6 +13,7 @@ public class FramePrincipal extends javax.swing.JFrame {
     public FramePrincipal() {
         super("Secretaria de Comunicaciones y Transportes");
         initComponents();
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagenes/icon.jpg")));
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setVisible(true);
@@ -95,7 +97,7 @@ public class FramePrincipal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Modificar o Eliminar Registro", panelModificar);
 
-        LOGO.setIcon(new javax.swing.ImageIcon("C:\\Users\\bradl\\Documents\\NetBeansProjects\\Proyecto_ServicioSocial\\src\\proyecto_serviciosocial\\LOGO-SCT.jpg")); // NOI18N
+        LOGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/LOGO-SCT.jpg"))); // NOI18N
 
         javax.swing.GroupLayout panelFondoLayout = new javax.swing.GroupLayout(panelFondo);
         panelFondo.setLayout(panelFondoLayout);

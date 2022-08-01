@@ -181,7 +181,7 @@ public class PanelMod extends javax.swing.JPanel {
 
         btnGuardar.setBackground(new java.awt.Color(255, 255, 255));
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/proyecto_serviciosocial/guardar.png"))); // NOI18N
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar.png"))); // NOI18N
         btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -191,7 +191,7 @@ public class PanelMod extends javax.swing.JPanel {
 
         btnCancelar.setBackground(new java.awt.Color(255, 255, 255));
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/proyecto_serviciosocial/cancel.png"))); // NOI18N
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancel.png"))); // NOI18N
         btnCancelar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -240,7 +240,7 @@ lbMotivo1.setText("Guardar");
 lbMotivo2.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
 lbMotivo2.setText("Cancelar");
 
-btnCon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/proyecto_serviciosocial/lu2.png"))); // NOI18N
+btnCon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/lu2.png"))); // NOI18N
 btnCon.addActionListener(new java.awt.event.ActionListener() {
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         btnConActionPerformed(evt);
