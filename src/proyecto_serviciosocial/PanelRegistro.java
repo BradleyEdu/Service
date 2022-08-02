@@ -520,102 +520,165 @@ public class PanelRegistro extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String sql, filiacion,curp,rfc,homoclave,apellido_paterno, apellido_materno,nombre,calle,numero,colonia,
-                codigo_postal,ciudad,estado,ingreso_letra,baja_letra,motivo_baja;
-        
-        String fechaIng,fechaBaja;
-        filiacion = txtFiliacion.getText();
-        curp = txtCurp.getText();
-        rfc = txtRfc.getText();
-        homoclave = txtHomo.getText();
-        apellido_paterno = txtPaterno.getText();
-        apellido_materno = txtMaterno.getText();
-        nombre = txtNombre.getText();
-        calle = txtCalle.getText();
-        numero = txtNumeroExt.getText();
-        colonia = txtColonia.getText();
-        codigo_postal = txtCP.getText();
-        ciudad = txtCiudad.getText();
-        estado = txtEstado.getText();
-        fechaIng=txtDiaIng.getText()+"/"+txtMesIng.getText()+"/"+txtAnoIng.getText();
-        //ingreso = fechaIng;
-        ingreso_letra = txtIngresoL.getText();
-        fechaBaja=txtDiaBaja.getText()+"/"+txtMesBaja.getText()+"/"+txtAnoBaja.getText();
-        //baja = fechaBaja;
-        baja_letra = txtBajaL.getText();
-        motivo_baja =(String) BoxBaja.getSelectedItem();
-        
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy"); 
-        Date fecha = null;
-        try {
-            fecha = formato.parse(fechaIng);
-            System.out.println(fecha);
-        } catch (ParseException ex) {
-            Logger.getLogger(PanelRegistro.class.getName()).log(Level.SEVERE, null, ex);
+        if (Completado()) {
+            JOptionPane.showMessageDialog(null, "La información ingresada esta incompleta\nFavor de completarla", "Información Incompleta", JOptionPane.WARNING_MESSAGE);
+        } else {
+            String sql, filiacion, curp, rfc, homoclave, apellido_paterno, apellido_materno, nombre, calle, numero, colonia,
+                    codigo_postal, ciudad, estado, ingreso_letra, baja_letra, motivo_baja;
+
+            String fechaIng, fechaBaja;
+            filiacion = txtFiliacion.getText();
+            curp = txtCurp.getText();
+            rfc = txtRfc.getText();
+            homoclave = txtHomo.getText();
+            apellido_paterno = txtPaterno.getText();
+            apellido_materno = txtMaterno.getText();
+            nombre = txtNombre.getText();
+            calle = txtCalle.getText();
+            numero = txtNumeroExt.getText();
+            colonia = txtColonia.getText();
+            codigo_postal = txtCP.getText();
+            ciudad = txtCiudad.getText();
+            estado = txtEstado.getText();
+            fechaIng = txtDiaIng.getText() + "/" + txtMesIng.getText() + "/" + txtAnoIng.getText();
+            //ingreso = fechaIng;
+            ingreso_letra = txtIngresoL.getText();
+            fechaBaja = txtDiaBaja.getText() + "/" + txtMesBaja.getText() + "/" + txtAnoBaja.getText();
+            //baja = fechaBaja;
+            baja_letra = txtBajaL.getText();
+            motivo_baja = (String) BoxBaja.getSelectedItem();
+
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            Date fecha = null;
+            try {
+                fecha = formato.parse(fechaIng);
+                System.out.println(fecha);
+            } catch (ParseException ex) {
+                Logger.getLogger(PanelRegistro.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate = simpleDateFormat.format(fecha);
+
+            java.sql.Date ingreso = java.sql.Date.valueOf(formattedDate);
+
+            try {
+                fecha = formato.parse(fechaBaja);
+                System.out.println(fecha);
+            } catch (ParseException ex) {
+                Logger.getLogger(PanelRegistro.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+
+            String formattedDate1 = simpleDateFormat1.format(fecha);
+
+            java.sql.Date baja = java.sql.Date.valueOf(formattedDate1);
+
+            //insertar en la tabla PERSONAL (campos de la tabla)valores (variables)
+            sql = "INSERT INTO personal (filiacion,curp,rfc,homoclave,apellido_paterno,"
+                    + "apellido_materno,nombre,calle,numero,colonia,codigo_postal,"
+                    + "ciudad,estado,ingreso,ingreso_letra,baja,baja_letra,motivo_baja) "
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            try {
+                System.out.println("---INICIA REGISTRO DE DATOS----");
+                //System.out.println("Filiacion: "+filiacion);
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setString(1, filiacion);
+                ps.setString(2, curp);
+                ps.setString(3, rfc);
+                ps.setString(4, homoclave);
+                ps.setString(5, apellido_paterno);
+                ps.setString(6, apellido_materno);
+                ps.setString(7, nombre);
+                ps.setString(8, calle);
+                ps.setString(9, numero);
+                ps.setString(10, colonia);
+                ps.setString(11, codigo_postal);
+                ps.setString(12, ciudad);
+                ps.setString(13, estado);
+                ps.setDate(14, ingreso);
+                ps.setString(15, ingreso_letra);
+                ps.setDate(16, baja);
+                ps.setString(17, baja_letra);
+                ps.setString(18, motivo_baja);
+                ps.executeUpdate();
+                //verTabla();
+                JOptionPane.showMessageDialog(null, "Registro Guardado");
+                //limpiar();
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelRegistro.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("NO SE GUARDARON LOS DATOS!!!");
+            }
         }
-        
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        String formattedDate = simpleDateFormat.format(fecha);
-
-        java.sql.Date ingreso = java.sql.Date.valueOf(formattedDate);
-        
-        try {
-            fecha = formato.parse(fechaBaja);
-            System.out.println(fecha);
-        } catch (ParseException ex) {
-            Logger.getLogger(PanelRegistro.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-
-        String formattedDate1 = simpleDateFormat1.format(fecha);
-
-        java.sql.Date baja = java.sql.Date.valueOf(formattedDate1);
-        
-        
-        //insertar en la tabla PERSONAL (campos de la tabla)valores (variables)
-        sql = "INSERT INTO personal (filiacion,curp,rfc,homoclave,apellido_paterno,"
-                + "apellido_materno,nombre,calle,numero,colonia,codigo_postal,"
-                + "ciudad,estado,ingreso,ingreso_letra,baja,baja_letra,motivo_baja) "
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        try {
-            System.out.println("---INICIA REGISTRO DE DATOS----");
-            //System.out.println("Filiacion: "+filiacion);
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, filiacion);
-            ps.setString(2,curp);
-            ps.setString(3, rfc);
-            ps.setString(4, homoclave);
-            ps.setString(5, apellido_paterno);
-            ps.setString(6, apellido_materno);
-            ps.setString(7, nombre);
-            ps.setString(8, calle);
-            ps.setString(9, numero);
-            ps.setString(10, colonia);
-            ps.setString(11, codigo_postal);
-            ps.setString(12, ciudad);
-            ps.setString(13, estado);
-            ps.setDate(14, ingreso);
-            ps.setString(15, ingreso_letra);
-            ps.setDate(16, baja);
-            ps.setString(17, baja_letra);
-            ps.setString(18, motivo_baja);
-            ps.executeUpdate();
-            //verTabla();
-            JOptionPane.showMessageDialog(null, "Registro Guardado");
-            //limpiar();
-        } catch (SQLException ex) {
-            Logger.getLogger(PanelRegistro.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("NO SE GUARDARON LOS DATOS!!!");
-        }
-        
-
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        int res = JOptionPane.showConfirmDialog(null, "Estas seguro que deseas cancelar?\nSi cancelas no se realizaran los cambios que hayas hecho","ALERTA!!!",JOptionPane.YES_NO_OPTION);
+        // 0=yes, 1=no, 2=cancel
+        
+        if(res == 0){
+            Limpiar();
+        }
+        
     }//GEN-LAST:event_btnCancelarActionPerformed
-
+    
+    public void Limpiar(){
+        txtFiliacion.setText(null);
+        txtCurp.setText(null);
+        txtRfc.setText(null);
+        txtHomo.setText(null);
+        txtPaterno.setText(null);
+        txtMaterno.setText(null);
+        txtNombre.setText(null);
+        txtCalle.setText(null);
+        txtNumeroExt.setText(null);
+        txtColonia.setText(null);
+        txtCP.setText(null);
+        txtCiudad.setText(null);
+        txtEstado.setText(null);
+        txtIngresoL.setText(null);
+        txtBajaL.setText(null);
+    }
+    
+    public boolean Completado(){
+        boolean complete = false;
+        
+        //Si se encuentran celdas vacias se cambia a "true el valor"
+        if (txtFiliacion.getText().equals("")) {
+            complete = true;
+        } else if (txtCurp.getText().equals("")) {
+            complete = true;
+        } else if (txtRfc.getText().equals("")) {
+            complete = true;
+        } else if (txtHomo.getText().equals("")) {
+            complete = true;
+        } else if (txtPaterno.getText().equals("")) {
+            complete = true;
+        } else if (txtMaterno.getText().equals("")) {
+            complete = true;
+        } else if (txtNombre.getText().equals("")) {
+            complete = true;
+        } else if (txtCalle.getText().equals("")) {
+            complete = true;
+        } else if (txtNumeroExt.getText().equals("")) {
+            complete = true;
+        } else if (txtColonia.getText().equals("")) {
+            complete = true;
+        } else if (txtCP.getText().equals("")) {
+            complete = true;
+        } else if (txtCiudad.getText().equals("")) {
+            complete = true;
+        } else if (txtEstado.getText().equals("")) {
+            complete = true;
+        } else if (txtIngresoL.getText().equals("")) {
+            complete = true;
+        } else if (txtBajaL.getText().equals("")) {
+            complete = true;
+        }
+        
+        return complete;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> BoxBaja;
