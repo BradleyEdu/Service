@@ -1080,21 +1080,21 @@ public class panelCons extends javax.swing.JPanel {
 
             if (sacarFechaBaja(txtFili.getText()) != null) {
 
-                sql = "SELECT motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
+                sql = "SELECT motivo, del, al, puesto, codigo, nivel, zona, sueldo, quinquenio, otras, "
                         + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
                         + "WHERE filiacion = '" + txtFili.getText() + "' "
                         + "AND del >= '" + sacarFechaBaja(txtFili.getText()) + "' "
                         //+ "AND motivo != '"+""+"' "
-                        + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras"
+                        + "GROUP BY motivo, del, al, puesto, codigo, nivel, zona, sueldo, quinquenio, otras"
                         + " ORDER BY del ASC";
             } else {
 
-                sql = "SELECT motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
+                sql = "SELECT motivo, del, al, puesto, codigo, nivel, zona, sueldo, quinquenio, otras, "
                         + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
                         + "WHERE filiacion = '" + txtFili.getText() + "' "
                         //+ "AND del >= '" + sacarFechaBaja(txtFili.getText()) + "' "
                         + "AND motivo != '" + "" + "' "
-                        + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras"
+                        + "GROUP BY motivo, del, al, puesto, codigo, nivel, zona, sueldo, quinquenio, otras"
                         + " ORDER BY del ASC";
             }
 
@@ -1116,12 +1116,12 @@ public class panelCons extends javax.swing.JPanel {
                 columnas[3] = rs.getString(4);
                 columnas[4] = rs.getString(5);
                 columnas[5] = rs.getString(6);
-                columnas[6] = "";
-                columnas[7] = rs.getString(7);
-                columnas[8] = rs.getDouble(7);
-                columnas[9] = rs.getDouble(8);
-                columnas[10] = rs.getDouble(9);
-                columnas[11] = rs.getDouble(10);
+                columnas[6] = rs.getString(7);
+                columnas[7] = rs.getString(8);
+                columnas[8] = rs.getDouble(9);
+                columnas[9] = rs.getDouble(10);
+                columnas[10] = rs.getDouble(11);
+                //columnas[11] = rs.getDouble(12);
                 modelo.addRow(columnas);
             }
 
@@ -1138,11 +1138,11 @@ public class panelCons extends javax.swing.JPanel {
         Object columnas[] = new Object[12];
 
         try {
-            String sql = "SELECT del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
+            String sql = "SELECT del, al, puesto, codigo, nivel, zona, sueldo, quinquenio, otras, "
                     + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
-                    + "WHERE filiacion = '" + "ROGS671001D40" + "' "
-                    + "AND ISNULL(motivo) "
-                    + "GROUP BY del, al, puesto, codigo, nivel, sueldo, quinquenio, otras "
+                    + "WHERE filiacion = '" + txtFili.getText() + "' "
+                    + "AND (ISNULL(motivo) OR motivo = '"+ "" +"') "
+                    + "GROUP BY del, al, puesto, codigo, nivel, zona, sueldo, quinquenio, otras "
                     + "ORDER BY del ASC";
 
             Statement sentencia = con.createStatement();
@@ -1159,19 +1159,19 @@ public class panelCons extends javax.swing.JPanel {
                 }
                 columnas[2] = rs.getString(3);
                 columnas[3] = rs.getString(4);
-                columnas[4] = "";
-                columnas[5] = rs.getString(5);
-                columnas[6] = rs.getDouble(6);
-                columnas[7] = rs.getDouble(7);
-                columnas[8] = rs.getDouble(8);
-                columnas[9] = rs.getDouble(9);
+                columnas[4] = rs.getString(5);
+                columnas[5] = rs.getString(6);
+                columnas[6] = rs.getDouble(7);
+                columnas[7] = rs.getDouble(8);
+                columnas[8] = rs.getDouble(9);
+                columnas[9] = rs.getDouble(10);
                 modelo2.addRow(columnas);
 
             }
             tablaTodo.setModel(modelo2);
 
         } catch (SQLException ex) {
-            Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(panelCons.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error de consulta", "Error en la consulta", JOptionPane.ERROR_MESSAGE);
         }
     }
