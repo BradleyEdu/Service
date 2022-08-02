@@ -409,8 +409,13 @@ public class Agregar extends javax.swing.JFrame {
         String sql = "INSERT INTO personal_sueldo (filiacion, del, al, codigo, puesto, nivel, zona, sueldo, quinquenio, otras, total, motivo)"
                 + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         
-        java.sql.Date fecha1 = new java.sql.Date(0003112);
-        java.sql.Date fecha2 = new java.sql.Date(19990101);
+        /*java.sql.Date fecha1 = new java.sql.Date(0003112);
+        java.sql.Date fecha2 = new java.sql.Date(19990101);*/
+        
+        String Del = txtDel_ano.getText() + "-" + txtDel_mes.getText() + "-" + txtDel_dia.getText();
+        Del = Del.replace(" ","");
+        String Al = txtAl_ano.getText() + "-" + txtAl_mes.getText() + "-" + txtAl_dia.getText();
+        Al = Al.replace(" ","");
         
         try {
             System.out.println("---INICIA REGISTRO DE DATOS----");
@@ -418,8 +423,8 @@ public class Agregar extends javax.swing.JFrame {
             PreparedStatement ps = con.prepareStatement(sql);
             
             ps.setString(1, panelCons.txtFili.getText());
-            ps.setDate(2, fecha1);
-            ps.setDate(3, fecha2);
+            ps.setString(2, Del);
+            ps.setString(3, Al);
             ps.setString(4, "");
             ps.setString(5, "");
             ps.setString(6, "");
@@ -458,7 +463,8 @@ public class Agregar extends javax.swing.JFrame {
                     + "WHERE filiacion = '" + txtFili.getText() + "' "
                     + "AND del >= '" + sacarFechaBaja(txtFili.getText()) + "' "
                     //+ "AND motivo != '"+""+"' "
-                    + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras";
+                    + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras "
+                    + "ORDER BY del ASC";
 
             Statement sentencia = con.createStatement();
             ResultSet rs = sentencia.executeQuery(sql);
@@ -500,7 +506,7 @@ public class Agregar extends javax.swing.JFrame {
     public Date sacarFechaBaja(String filia) {
         try {
             String sql = "SELECT del FROM personal_sueldo WHERE motivo != '" + "" + "' AND "
-                    + "filiacion = '" + filia + "' LIMIT 1";
+                    + "filiacion = '" + filia + "' ORDER BY del ASC LIMIT 1";
 
             Statement sentencia = con.createStatement();
             ResultSet rs = sentencia.executeQuery(sql);

@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +27,13 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 
 /**
  *
@@ -40,6 +48,7 @@ public class panelCons extends javax.swing.JPanel {
     public static DefaultTableModel modelo2 = new DefaultTableModel();
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat fechaBien = new SimpleDateFormat("yyyy-MM-dd");
 
     Editar edit = new Editar();
     EditarTab2 edit2 = new EditarTab2();
@@ -950,6 +959,7 @@ public class panelCons extends javax.swing.JPanel {
                     + "baja_letra= ?,"
                     + "motivo_baja= ?"
                     + "where filiacion='" + filiacion + "'";
+
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, filiacion);
             ps.setString(2, curp);
@@ -990,13 +1000,14 @@ public class panelCons extends javax.swing.JPanel {
     public Date sacarFechaBaja(String filia) {
         try {
             String sql = "SELECT del FROM personal_sueldo WHERE motivo != '" + "" + "' AND "
-                    + "filiacion = '" + filia + "' LIMIT 1";
+                    + "filiacion = '" + filia + "' ORDER BY del ASC LIMIT 1";
 
             Statement sentencia = con.createStatement();
             ResultSet rs = sentencia.executeQuery(sql);
 
             while (rs.next()) {
                 Date fechaBaja = rs.getDate(1);
+
                 if (rs.getDate(1) != null) {
                     return fechaBaja;
                 }
@@ -1032,12 +1043,15 @@ public class panelCons extends javax.swing.JPanel {
                 txtCp.setText(rs.getString(10));
                 txtCiudad.setText(rs.getString(11));
                 txtEstado.setText(rs.getString(12));
+
                 Date fechaIngreso = rs.getDate(13);
                 String ingreso = (formatter.format(fechaIngreso));
+
                 txtIngreso_dia.setText(ingreso.substring(0, 2));
                 txtIngreso_mes.setText(ingreso.substring(3, 5));
                 txtIngreso_ano.setText(ingreso.substring(6, 10));
                 txtIngreso_letra.setText((rs.getString(14)));
+
                 if (rs.getDate(15) != null) {
                     Date fechaBaja = rs.getDate(15);
                     String baja = (formatter.format(fechaBaja));
@@ -1045,6 +1059,7 @@ public class panelCons extends javax.swing.JPanel {
                     txtBaja_mes.setText(baja.substring(3, 5));
                     txtBaja_ano.setText(baja.substring(6, 10));
                 }
+
                 txtBaja_letra.setText(rs.getString(16));
                 txtMotivos.setText(rs.getString(17));
             }
@@ -1060,25 +1075,38 @@ public class panelCons extends javax.swing.JPanel {
 
     public void consultarPersonal_Sueldo() throws IOException {
         Object columnas[] = new Object[12];
-
+        String sql = "";
         try {
 
-            String sql = "SELECT motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
-                    + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
-                    + "WHERE filiacion = '" + txtFili.getText() + "' "
-                    + "AND del >= '" + sacarFechaBaja(txtFili.getText()) + "' "
-                    //+ "AND motivo != '"+""+"' "
-                    + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras";
+            if (sacarFechaBaja(txtFili.getText()) != null) {
+
+                sql = "SELECT motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
+                        + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
+                        + "WHERE filiacion = '" + txtFili.getText() + "' "
+                        + "AND del >= '" + sacarFechaBaja(txtFili.getText()) + "' "
+                        //+ "AND motivo != '"+""+"' "
+                        + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras"
+                        + " ORDER BY del ASC";
+            } else {
+
+                sql = "SELECT motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras, "
+                        + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
+                        + "WHERE filiacion = '" + txtFili.getText() + "' "
+                        //+ "AND del >= '" + sacarFechaBaja(txtFili.getText()) + "' "
+                        + "AND motivo != '" + "" + "' "
+                        + "GROUP BY motivo, del, al, puesto, codigo, nivel, sueldo, quinquenio, otras"
+                        + " ORDER BY del ASC";
+            }
 
             Statement sentencia = con.createStatement();
             ResultSet rs = sentencia.executeQuery(sql);
 
             while (rs.next()) {
                 columnas[0] = rs.getString(1);
-                
+
                 Date fechaDel = rs.getDate(2);
                 Date fechaAl = rs.getDate(3);
-                
+
                 columnas[1] = formatter.format(fechaDel);
                 if (fechaAl == null) {
                     columnas[2] = "";
@@ -1096,14 +1124,14 @@ public class panelCons extends javax.swing.JPanel {
                 columnas[11] = rs.getDouble(10);
                 modelo.addRow(columnas);
             }
-            
+
             tablaPuestos.setModel(modelo);
 
         } catch (SQLException ex) {
             Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error de consulta", "Tabla"
                     + " de personal_sueldo", JOptionPane.ERROR_MESSAGE);
-        } 
+        }
     }
 
     public void llenarTabla2() throws IOException {
@@ -1114,7 +1142,8 @@ public class panelCons extends javax.swing.JPanel {
                     + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
                     + "WHERE filiacion = '" + "ROGS671001D40" + "' "
                     + "AND ISNULL(motivo) "
-                    + "GROUP BY del, al, puesto, codigo, nivel, sueldo, quinquenio, otras";
+                    + "GROUP BY del, al, puesto, codigo, nivel, sueldo, quinquenio, otras "
+                    + "ORDER BY del ASC";
 
             Statement sentencia = con.createStatement();
             ResultSet rs = sentencia.executeQuery(sql);
@@ -1303,7 +1332,7 @@ public class panelCons extends javax.swing.JPanel {
             ingreso_letra.setCellValue(txtIngreso_letra.getText());
             baja.setCellValue(bajaN);
             baja_letra.setCellValue(txtBaja_letra.getText());
-            
+
             llenarTablaHD(file, wb, sheet);
             llenarTablaHD2(file, wb, sheet2);
 
@@ -1322,114 +1351,14 @@ public class panelCons extends javax.swing.JPanel {
         }
     }
 
-    public void llenarTabla(Object[] datos, int cont) throws IOException {
-        try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx"));
-
-            XSSFWorkbook wb = new XSSFWorkbook(file);
-            XSSFSheet sheet = wb.getSheetAt(0);
-
-            XSSFRow fila = sheet.getRow(cont);
-
-            if (fila == null) {
-                fila = sheet.createRow(cont);
-            }
-
-            XSSFCell celda1 = fila.createCell(0); //Motivo
-            XSSFCell celda2 = fila.createCell(1); //del
-            XSSFCell celda3 = fila.createCell(2); //al
-            XSSFCell celda4 = fila.createCell(3); //nombre
-            XSSFCell celda5 = fila.createCell(4); //puesto
-            XSSFCell celda6 = fila.createCell(5); //ramo registrado
-            XSSFCell celda7 = fila.createCell(6); //pagaduria registrada
-            XSSFCell celda8 = fila.createCell(7); //saldo basico
-            XSSFCell celda9 = fila.createCell(8); //quinquenio
-            XSSFCell celda10 = fila.createCell(9); //otras percepciones
-            XSSFCell celda11 = fila.createCell(10); //total
-
-            if (celda1 == null) {
-                celda1 = fila.createCell(0);
-            }
-
-            if (celda2 == null) {
-                celda2 = fila.createCell(1);
-            }
-
-            if (celda3 == null) {
-                celda3 = fila.createCell(2);
-            }
-
-            if (celda4 == null) {
-                celda4 = fila.createCell(3);
-            }
-
-            if (celda5 == null) {
-                celda5 = fila.createCell(4);
-            }
-
-            if (celda6 == null) {
-                celda6 = fila.createCell(5);
-            }
-
-            if (celda7 == null) {
-                celda7 = fila.createCell(6);
-            }
-
-            if (celda8 == null) {
-                celda8 = fila.createCell(7);
-            }
-
-            if (celda9 == null) {
-                celda9 = fila.createCell(8);
-            }
-
-            if (celda10 == null) {
-                celda10 = fila.createCell(9);
-            }
-
-            if (celda11 == null) {
-                celda11 = fila.createCell(10);
-            }
-
-            for (int i = 0; i < datos.length; i++) {
-                if (datos[i] == null) {
-                    datos[i] = "";
-                }
-            }
-
-            celda1.setCellValue(datos[0].toString());
-            celda2.setCellValue(datos[1].toString());
-            celda3.setCellValue(datos[2].toString());
-            celda4.setCellValue(datos[3].toString());
-            celda5.setCellValue(datos[4].toString());
-            celda6.setCellValue(datos[5].toString());
-            celda7.setCellValue(datos[6].toString());
-            celda8.setCellValue(datos[7].toString());
-            celda9.setCellValue(datos[8].toString());
-            celda10.setCellValue(datos[9].toString());
-            //celda11.setCellValue(datos[10].toString());
-
-            file.close();
-
-            FileOutputStream output = new FileOutputStream("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx");
-            wb.write(output);
-            output.close();
-
-            /*File file1= new File("C:\\Users\\dog_a\\Downloads\\servicio.xlsx");
-            Desktop.getDesktop().open(file1);*/
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(panelCons.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Cierre el programa Excel para generar el formato");
-        }
-    }
 
     public void llenarTablaHD(FileInputStream file, XSSFWorkbook wb, XSSFSheet sh) throws IOException {
-        
+
         int limite = tablaPuestos.getRowCount() - 1;
         int j = 0;
         int cont = 28;
         Object datos[] = new Object[11];
-        
+
         while (j < limite) {
 
             XSSFRow fila = sh.getRow(cont);
@@ -1515,13 +1444,35 @@ public class panelCons extends javax.swing.JPanel {
             }
 
             for (int i = 0; i < datos.length; i++) {
-                
+
                 datos[i] = tablaPuestos.getValueAt(j, i);
-                
+
                 if (datos[i] == null) {
                     datos[i] = "            ";
                 }
             }
+
+            CellStyle cellStyle2 = fila.getSheet().getWorkbook().createCellStyle();
+            cellStyle2.setAlignment(CellStyle.ALIGN_CENTER);
+            cellStyle2.setBorderBottom(BorderStyle.THIN);
+            cellStyle2.setBorderLeft(BorderStyle.THIN);
+            cellStyle2.setBorderRight(BorderStyle.THIN);
+
+            celda1.setCellStyle(cellStyle2);
+            celda2_dia.setCellStyle(cellStyle2);
+            celda2_mes.setCellStyle(cellStyle2);
+            celda2_ano.setCellStyle(cellStyle2);
+            celda3_dia.setCellStyle(cellStyle2);
+            celda3_mes.setCellStyle(cellStyle2);
+            celda3_ano.setCellStyle(cellStyle2);
+            celda4.setCellStyle(cellStyle2);
+            celda5.setCellStyle(cellStyle2);
+            celda6.setCellStyle(cellStyle2);
+            celda7.setCellStyle(cellStyle2);
+            celda8.setCellStyle(cellStyle2);
+            celda9.setCellStyle(cellStyle2);
+            celda10.setCellStyle(cellStyle2);
+            celda11.setCellStyle(cellStyle2);
 
             celda1.setCellValue(datos[0].toString());
             celda2_dia.setCellValue((datos[1].toString()).substring(0, 2));
@@ -1543,14 +1494,14 @@ public class panelCons extends javax.swing.JPanel {
             cont++;
         }
     }
-    
+
     public void llenarTablaHD2(FileInputStream file, XSSFWorkbook wb, XSSFSheet sh) throws IOException {
-        
+
         int limite = tablaTodo.getRowCount() - 1;
         int j = 0;
         int cont = 6;
         Object datos[] = new Object[10];
-        
+
         while (j < limite) {
 
             XSSFRow fila = sh.getRow(cont);
@@ -1573,7 +1524,6 @@ public class panelCons extends javax.swing.JPanel {
             XSSFCell celda9 = fila.createCell(11); //quinquenio
             XSSFCell celda10 = fila.createCell(12); //otras percepciones
             XSSFCell celda11 = fila.createCell(13); //total
-
 
             if (celda2_dia == null) {
                 celda2_dia = fila.createCell(0);
@@ -1632,9 +1582,9 @@ public class panelCons extends javax.swing.JPanel {
             }
 
             for (int i = 0; i < datos.length; i++) {
-                
+
                 datos[i] = tablaTodo.getValueAt(j, i);
-                
+
                 if (datos[i] == null) {
                     datos[i] = "            ";
                 }
@@ -1658,19 +1608,17 @@ public class panelCons extends javax.swing.JPanel {
             j++;
             cont++;
         }
+        
+        insertarImg(file, wb, sh, cont + 10);
     }
 
-    public void modificar() throws IOException {
-        try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx"));
-
-            XSSFWorkbook wb = new XSSFWorkbook(file);
-            XSSFSheet sheet = wb.getSheetAt(0);
-
-            XSSFRow fila = sheet.getRow(29);
+    public void insertarImg(FileInputStream file, XSSFWorkbook wb, XSSFSheet sh, int filaF) throws IOException {
+                    
+    
+            XSSFRow fila = sh.getRow(filaF);
 
             if (fila == null) {
-                fila = sheet.createRow(29);
+                fila = sh.createRow(filaF);
             }
 
             XSSFCell celda = fila.createCell(0);
@@ -1679,20 +1627,36 @@ public class panelCons extends javax.swing.JPanel {
                 celda = fila.createCell(0);
             }
 
-            celda.setCellValue(txtFili.getText());
+            //FileInputStream obtains input bytes from the image file
+            InputStream inputStream = new FileInputStream("C:\\condusef.png");
+            
+            //Get the contents of an InputStream as a byte[].
+            byte[] bytes = IOUtils.toByteArray(inputStream);
+            
+            //Adds a picture to the workbook
+            int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+            
+            //close the input stream
+            inputStream.close();
 
-            file.close();
+            //Returns an object that handles instantiating concrete classes
+            CreationHelper helper = wb.getCreationHelper();
 
-            FileOutputStream output = new FileOutputStream("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx");
-            wb.write(output);
-            output.close();
+            //Creates the top-level drawing patriarch.
+            Drawing drawing = sh.createDrawingPatriarch();
 
-            File file1 = new File("C:\\Users\\dog_a\\Downloads\\servicioo_2.0 (1).xlsx");
-            Desktop.getDesktop().open(file1);
+            //Create an anchor that is attached to the worksheet
+            ClientAnchor anchor = helper.createClientAnchor();
+            
+            //set top-left corner for the image
+            anchor.setCol1(0);
+            anchor.setRow1(filaF);
 
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(panelCons.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            //Creates a picture
+            Picture pict = drawing.createPicture(anchor, pictureIdx);
+            //Reset the image to the original size
+            pict.resize();
+   
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
