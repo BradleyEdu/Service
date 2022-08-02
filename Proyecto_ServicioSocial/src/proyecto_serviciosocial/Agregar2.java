@@ -1,6 +1,9 @@
 
 package proyecto_serviciosocial;
 
+import static proyecto_serviciosocial.panelCons.tablaTodo;
+import static proyecto_serviciosocial.panelCons.modelo2;
+
 /**
  *
  * @author Eliud Ayala
@@ -109,6 +112,11 @@ public class Agregar2 extends javax.swing.JFrame {
         btnAgregar.setBackground(new java.awt.Color(153, 255, 153));
         btnAgregar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnCancela.setBackground(new java.awt.Color(255, 102, 102));
         btnCancela.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
@@ -364,9 +372,13 @@ public class Agregar2 extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCancelaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        int filas2 = tablaTodo.getRowCount();
+        for (int i = filas2 - 1; i >= 0; i--) {
+            modelo2.removeRow(0);
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
