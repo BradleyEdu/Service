@@ -1,8 +1,20 @@
-
 package proyecto_serviciosocial;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import static proyecto_serviciosocial.panelCons.modelo;
 import static proyecto_serviciosocial.panelCons.tablaTodo;
 import static proyecto_serviciosocial.panelCons.modelo2;
+import static proyecto_serviciosocial.panelCons.tablaPuestos;
+import static proyecto_serviciosocial.panelCons.txtFili;
 
 /**
  *
@@ -14,6 +26,10 @@ public class Agregar2 extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
+
+    conexion conect = new conexion();
+    Connection con = conect.getConnection();
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -377,7 +393,90 @@ public class Agregar2 extends javax.swing.JFrame {
         for (int i = filas2 - 1; i >= 0; i--) {
             modelo2.removeRow(0);
         }
+
+        String sql = "INSERT INTO personal_sueldo (filiacion, del, al, codigo, puesto, nivel, zona, sueldo, quinquenio, otras, total, motivo)"
+                + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+
+        String Del = txtDel_ano.getText() + "-" + txtDel_mes.getText() + "-" + txtDel_dia.getText();
+        Del = Del.replace(" ", "");
+        String Al = txtAl_ano.getText() + "-" + txtAl_mes.getText() + "-" + txtAl_dia.getText();
+        Al = Al.replace(" ", "");
+
+        try {
+            System.out.println("---INICIA REGISTRO DE DATOS----");
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, panelCons.txtFili.getText());
+            ps.setString(2, Del);
+            ps.setString(3, Al);
+            ps.setString(4, txtCod.getText());
+            ps.setString(5, txtNom.getText());
+            ps.setString(6, txtRamo.getText());
+            ps.setString(7, txtPagad.getText());
+            ps.setDouble(8, Double.valueOf(txtSueldo.getText()));
+            ps.setDouble(9, Double.valueOf(txtQuinq.getText()));
+            ps.setDouble(10, Double.valueOf(txtOtras.getText()));
+            ps.setDouble(11, Double.valueOf(txtTotal.getText()));
+            ps.setString(12, null);
+
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Registro Guardado");
+            llenarTabla();
+            this.dispose();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelRegistro.class.getName()).log(Level.SEVERE, null, ex);
+
+            System.out.println("---------------NO SE GUARDARON LOS DATOS!!!-------------");
+        }
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    public void llenarTabla() {
+        Object columnas[] = new Object[12];
+
+        try {
+            String sql = "SELECT del, al, puesto, codigo, nivel, zona, sueldo, quinquenio, otras, "
+                    + "sum(sueldo + quinquenio + otras) as total FROM personal_sueldo "
+                    + "WHERE filiacion = '" + panelCons.txtFili.getText() + "' "
+                    + "AND (ISNULL(motivo) OR motivo = '"+ "" +"') "
+                    + "GROUP BY del, al, puesto, codigo, nivel, sueldo, quinquenio, otras "
+                    + "ORDER BY del ASC";
+
+            Statement sentencia = con.createStatement();
+            ResultSet rs = sentencia.executeQuery(sql);
+
+            while (rs.next()) {
+                Date fechaDel = rs.getDate(1);
+                Date fechaAl = rs.getDate(2);
+                columnas[0] = formatter.format(fechaDel);
+                if (fechaAl == null) {
+                    columnas[1] = "";
+                } else {
+                    columnas[1] = formatter.format(fechaAl);
+                }
+                columnas[2] = rs.getString(3);
+                columnas[3] = rs.getString(4);
+                columnas[4] = rs.getString(5);
+                columnas[5] = rs.getString(6);
+                columnas[6] = rs.getDouble(7);
+                columnas[7] = rs.getDouble(8);
+                columnas[8] = rs.getDouble(9);
+                columnas[9] = rs.getDouble(10);
+                modelo2.addRow(columnas);
+
+            }
+            tablaTodo.setModel(modelo2);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error de consulta", "Error en la consulta", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
+    
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
